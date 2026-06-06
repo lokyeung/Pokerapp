@@ -759,6 +759,19 @@
     </div>
 
     <div class="settings-section">
+      <div class="section-title">🎲 籌碼設定</div>
+      <div class="settings-row">
+        <label>每人籌碼</label>
+        <input type="number" id="edit-chips" min="100" step="100">
+      </div>
+      <div class="settings-row">
+        <label>玩家人數</label>
+        <input type="number" id="edit-players" min="2" max="20">
+      </div>
+      <button class="btn btn-save" onclick="saveChips()">✓ 儲存籌碼</button>
+    </div>
+
+    <div class="settings-section">
       <div class="section-title">🔊 音效</div>
       <div class="settings-row">
         <label>Level 升級提示</label>
@@ -1199,6 +1212,8 @@
       }
       
       document.getElementById('edit-sound').value = soundEnabled ? 'on' : 'off';
+      document.getElementById('edit-chips').value = state.startingChips;
+      document.getElementById('edit-players').value = state.players;
     }
 
     function closeSettings() {
@@ -1243,6 +1258,18 @@
     document.getElementById('edit-sound').addEventListener('change', (e) => {
       soundEnabled = e.target.value === 'on';
     });
+
+    function saveChips() {
+      const chips = parseInt(document.getElementById('edit-chips').value);
+      const players = parseInt(document.getElementById('edit-players').value);
+      if (chips > 0) state.startingChips = chips;
+      if (players >= 2 && players <= 20) {
+        state.players = players;
+        document.getElementById('player-display').textContent = state.players;
+      }
+      updateChipInfo();
+      closeSettings();
+    }
 
     // Prevent sleep on mobile
     let wakeLock = null;
