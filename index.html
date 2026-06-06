@@ -388,6 +388,76 @@
       .blinds-value { font-size: 2rem; }
       .structure-panel { width: 100%; }
     }
+
+    /* Landscape Mode */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .header { padding: 8px; }
+      .header h1 { font-size: 1rem; }
+
+      #timer-screen {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 20px;
+        gap: 0;
+      }
+
+      #timer-screen .player-section {
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        margin: 0;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+
+      .landscape-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 40%;
+      }
+
+      .landscape-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 40%;
+      }
+
+      .level-info { margin-bottom: 4px; }
+      .level-label { font-size: 0.75rem; margin-bottom: 2px; }
+      .level-number { font-size: 1.4rem; }
+
+      .blinds-display { margin-bottom: 8px; }
+      .blinds-label { font-size: 0.7rem; margin-bottom: 2px; }
+      .blinds-value { font-size: 2.2rem; }
+      .ante-value { font-size: 1rem; }
+
+      .timer-display {
+        font-size: 5.5rem;
+        margin-bottom: 8px;
+      }
+
+      .next-level {
+        margin-bottom: 10px;
+        padding: 8px 14px;
+      }
+
+      .controls { gap: 8px; }
+      .btn { padding: 10px 20px; font-size: 0.9rem; min-width: 80px; }
+    }
+
+    /* Fullscreen landscape - even bigger */
+    @media (orientation: landscape) and (min-width: 600px) and (max-height: 500px) {
+      .timer-display { font-size: 7rem; }
+      .blinds-value { font-size: 2.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -474,31 +544,35 @@
       <span class="chip-info" id="chip-info"></span>
     </div>
 
-    <div class="level-info">
-      <div class="level-label">Level</div>
-      <div class="level-number" id="level-display">1</div>
+    <div class="landscape-left">
+      <div class="level-info">
+        <div class="level-label">Level</div>
+        <div class="level-number" id="level-display">1</div>
+      </div>
+
+      <div class="blinds-display">
+        <div class="blinds-label">Blinds</div>
+        <div class="blinds-value" id="blinds-display">25 / 50</div>
+        <div class="ante-value" id="ante-display"></div>
+      </div>
+
+      <div class="next-level">
+        <div class="label">Next Level</div>
+        <div class="value" id="next-level-display">50 / 100</div>
+      </div>
     </div>
 
-    <div class="blinds-display">
-      <div class="blinds-label">Blinds</div>
-      <div class="blinds-value" id="blinds-display">25 / 50</div>
-      <div class="ante-value" id="ante-display"></div>
-    </div>
+    <div class="landscape-right">
+      <div class="timer-display" id="timer-display">10:00</div>
 
-    <div class="timer-display" id="timer-display">10:00</div>
-
-    <div class="next-level">
-      <div class="label">Next Level</div>
-      <div class="value" id="next-level-display">50 / 100</div>
-    </div>
-
-    <div class="controls">
-      <button class="btn btn-prev" onclick="prevLevel()">◀ Prev</button>
-      <button class="btn btn-play" id="play-btn" onclick="toggleTimer()">▶ Start</button>
-      <button class="btn btn-next" onclick="nextLevel()">Next ▶</button>
-    </div>
-    <div class="controls" style="margin-top: 10px;">
-      <button class="btn btn-reset" onclick="resetTournament()">↺ Reset</button>
+      <div class="controls">
+        <button class="btn btn-prev" onclick="prevLevel()">◀ Prev</button>
+        <button class="btn btn-play" id="play-btn" onclick="toggleTimer()">▶ Start</button>
+        <button class="btn btn-next" onclick="nextLevel()">Next ▶</button>
+      </div>
+      <div class="controls" style="margin-top: 10px;">
+        <button class="btn btn-reset" onclick="resetTournament()">↺ Reset</button>
+      </div>
     </div>
   </div>
 
