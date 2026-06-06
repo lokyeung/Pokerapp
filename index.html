@@ -127,20 +127,32 @@
 
     .controls {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 10px;
       justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+      max-width: 400px;
     }
 
     .btn {
-      padding: 14px 28px;
+      padding: 14px 24px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      min-width: 100px;
+      flex: 1;
+      max-width: 140px;
+      text-align: center;
     }
 
     .btn:active { transform: scale(0.95); }
@@ -148,16 +160,30 @@
     .btn-play {
       background: #4ade80;
       color: #000;
+      flex: 2;
+      max-width: 180px;
+      padding: 16px 24px;
+      font-size: 1.1rem;
     }
 
     .btn-pause {
       background: #f59e0b;
       color: #000;
+      flex: 2;
+      max-width: 180px;
+      padding: 16px 24px;
+      font-size: 1.1rem;
     }
 
     .btn-reset {
       background: #333;
       color: #fff;
+    }
+
+    .btn-fullscreen {
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
     }
 
     .btn-prev, .btn-next {
@@ -688,8 +714,9 @@
         <button class="btn btn-play" id="play-btn" onclick="toggleTimer()">▶ Start</button>
         <button class="btn btn-next" onclick="nextLevel()">Next ▶</button>
       </div>
-      <div class="controls" style="margin-top: 10px;">
+      <div class="controls-row" style="margin-top: 10px;">
         <button class="btn btn-reset" onclick="resetTournament()">↺ Reset</button>
+        <button class="btn btn-fullscreen" onclick="toggleFullscreen()">⛶ Full Screen</button>
       </div>
     </div>
   </div>
@@ -1279,6 +1306,38 @@
           wakeLock = await navigator.wakeLock.request('screen');
         }
       } catch(e) {}
+    }
+
+    // ===== FULLSCREEN =====
+    function toggleFullscreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        const el = document.documentElement;
+        if (el.requestFullscreen) {
+          el.requestFullscreen();
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen(); // Safari/iOS
+        }
+        // Also lock landscape if supported
+        try {
+          screen.orientation.lock('landscape').catch(() => {});
+        } catch(e) {}
+        requestWakeLock();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    // Update button text based on fullscreen state
+    document.addEventListener('fullscreenchange', updateFsBtn);
+    document.addEventListener('webkitfullscreenchange', updateFsBtn);
+    function updateFsBtn() {
+      const btns = document.querySelectorAll('.btn-fullscreen');
+      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      btns.forEach(b => b.textContent = isFs ? '✕ Exit Full' : '⛶ Full Screen');
     }
     
     document.addEventListener('visibilitychange', () => {
