@@ -291,6 +291,124 @@
       z-index: 50;
     }
 
+    .btn-settings {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #222;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      z-index: 50;
+    }
+
+    /* Settings Modal */
+    .settings-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 24px;
+      z-index: 200;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .settings-modal.open { display: block; }
+
+    .settings-modal h3 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-modal .close-btn {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .settings-section {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #333;
+    }
+
+    .settings-section:last-child { border-bottom: none; }
+
+    .settings-section .section-title {
+      font-size: 0.8rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .time-adjust {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .time-adjust .btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      min-width: 60px;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .settings-row label {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .settings-row input {
+      width: 80px;
+      padding: 8px;
+      background: #0a0a0a;
+      border: 1px solid #444;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .settings-row select {
+      padding: 8px 12px;
+      background: #0a0a0a;
+      border: 1px solid #444;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .btn-save {
+      background: #4ade80;
+      color: #000;
+      width: 100%;
+      margin-top: 12px;
+    }
+
     /* Player Count */
     .player-section {
       display: flex;
@@ -577,7 +695,7 @@
   </div>
 
   <!-- Structure Panel -->
-  <div class="overlay" id="overlay" onclick="closeStructure()"></div>
+  <div class="overlay" id="overlay" onclick="closeStructure(); closeSettings();"></div>
   <div class="structure-panel" id="structure-panel">
     <button class="close-btn" onclick="closeStructure()">✕</button>
     <h3>Blind Structure</h3>
@@ -585,6 +703,72 @@
     </table>
   </div>
   <button class="btn-structure" id="btn-structure" style="display:none;" onclick="openStructure()">📋 Structure</button>
+  <button class="btn-settings" id="btn-settings" style="display:none;" onclick="openSettings()">⚙️ Settings</button>
+
+  <!-- Settings Modal -->
+  <div class="settings-modal" id="settings-modal">
+    <h3>
+      ⚙️ 遊戲設定
+      <button class="close-btn" onclick="closeSettings()">✕</button>
+    </h3>
+
+    <div class="settings-section">
+      <div class="section-title">⏱️ 調整當前時間</div>
+      <div class="time-adjust">
+        <button class="btn btn-prev" onclick="adjustTime(-60)">-1分</button>
+        <button class="btn btn-prev" onclick="adjustTime(-30)">-30秒</button>
+        <button class="btn btn-next" onclick="adjustTime(30)">+30秒</button>
+        <button class="btn btn-next" onclick="adjustTime(60)">+1分</button>
+        <button class="btn btn-next" onclick="adjustTime(300)">+5分</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-title">📐 Level 時長</div>
+      <div class="settings-row">
+        <label>每個 Level</label>
+        <select id="edit-duration" onchange="updateDuration()">
+          <option value="3">3 分鐘</option>
+          <option value="5">5 分鐘</option>
+          <option value="8">8 分鐘</option>
+          <option value="10">10 分鐘</option>
+          <option value="12">12 分鐘</option>
+          <option value="15">15 分鐘</option>
+          <option value="20">20 分鐘</option>
+          <option value="25">25 分鐘</option>
+          <option value="30">30 分鐘</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-title">💰 修改當前 Blinds</div>
+      <div class="settings-row">
+        <label>Small Blind</label>
+        <input type="number" id="edit-sb" min="1">
+      </div>
+      <div class="settings-row">
+        <label>Big Blind</label>
+        <input type="number" id="edit-bb" min="1">
+      </div>
+      <div class="settings-row">
+        <label>Ante</label>
+        <input type="number" id="edit-ante" min="0">
+      </div>
+      <button class="btn btn-save" onclick="saveBlinds()">✓ 儲存 Blinds</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-title">🔊 音效</div>
+      <div class="settings-row">
+        <label>Level 升級提示</label>
+        <select id="edit-sound">
+          <option value="on">開</option>
+          <option value="off">關</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
   <!-- Audio -->
   <audio id="level-up-sound" preload="auto">
@@ -742,6 +926,7 @@
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('timer-screen').style.display = 'flex';
       document.getElementById('btn-structure').style.display = 'block';
+      document.getElementById('btn-settings').style.display = 'block';
       document.getElementById('player-display').textContent = state.players;
       updateChipInfo();
       renderStructureTable();
@@ -942,6 +1127,7 @@
 
     // ===== AUDIO =====
     function playAlert() {
+      if (!soundEnabled) return;
       // Web Audio API beep
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -987,7 +1173,75 @@
         case 'ArrowLeft':
           prevLevel();
           break;
+        case 'Escape':
+          closeSettings();
+          closeStructure();
+          break;
       }
+    });
+
+    // ===== SETTINGS =====
+    let soundEnabled = true;
+
+    function openSettings() {
+      const modal = document.getElementById('settings-modal');
+      modal.classList.add('open');
+      document.getElementById('overlay').classList.add('open');
+
+      // Populate current values
+      document.getElementById('edit-duration').value = state.structure.duration;
+      
+      const level = state.structure.levels[state.currentLevel];
+      if (level && level.type !== 'break') {
+        document.getElementById('edit-sb').value = level.sb;
+        document.getElementById('edit-bb').value = level.bb;
+        document.getElementById('edit-ante').value = level.ante || 0;
+      }
+      
+      document.getElementById('edit-sound').value = soundEnabled ? 'on' : 'off';
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    function adjustTime(seconds) {
+      state.timeLeft = Math.max(0, state.timeLeft + seconds);
+      updateTimerDisplay();
+    }
+
+    function updateDuration() {
+      const newDuration = parseInt(document.getElementById('edit-duration').value);
+      state.structure.duration = newDuration;
+      renderStructureTable();
+    }
+
+    function saveBlinds() {
+      const sb = parseInt(document.getElementById('edit-sb').value);
+      const bb = parseInt(document.getElementById('edit-bb').value);
+      const ante = parseInt(document.getElementById('edit-ante').value) || 0;
+
+      if (sb > 0 && bb > 0) {
+        const level = state.structure.levels[state.currentLevel];
+        if (level && level.type !== 'break') {
+          level.sb = sb;
+          level.bb = bb;
+          level.ante = ante;
+
+          document.getElementById('blinds-display').textContent = 
+            `${formatNum(sb)} / ${formatNum(bb)}`;
+          document.getElementById('ante-display').textContent = 
+            ante ? `Ante: ${formatNum(ante)}` : '';
+          renderStructureTable();
+        }
+      }
+      closeSettings();
+    }
+
+    // Override sound check
+    document.getElementById('edit-sound').addEventListener('change', (e) => {
+      soundEnabled = e.target.value === 'on';
     });
 
     // Prevent sleep on mobile
